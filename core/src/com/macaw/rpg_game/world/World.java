@@ -26,6 +26,17 @@ import com.macaw.rpg_game.utils.InputHandler;
 import com.macaw.rpg_game.utils.TeleportData;
 import com.macaw.rpg_game.utils.TextureUtils;
 
+
+/*
+ * @author Micah Gwin
+ * 
+ * Main data structure in the game that contains entities,
+ * the player and all world tiles and bigTiles.
+ * Methods to update these objects or change state
+ * to a new world.
+ */
+
+
 public class World {
 
 	private Block[][] blocks;
