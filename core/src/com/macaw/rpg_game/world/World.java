@@ -298,6 +298,15 @@ public class World {
 		}
 	}
 	
+	public void spawnAnimatedMobs(int num) {
+		Random r = new Random();
+		for (int i = 0; i < num; i++) {
+			int x = r.nextInt(width - 1) + 1;
+			int y = r.nextInt(height - 1) + 1;
+			mobs.add(new Mob(x * blockSize, y * blockSize, 30, 30, "entity/zombieSheet.png"));
+		}
+	}
+	
 	public Block[][] getBlocks() {
 		return blocks;
 	}
