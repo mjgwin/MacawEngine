@@ -64,7 +64,7 @@ public class MainGameScreen implements Screen {
 
 		try {
 			world = new World("worldMaps/testArena.txt", camera, cameraSpeed);
-			world.spawnPlayer(2,2);
+			world.spawnPlayer(45,45);
 			EngineLogger.log("World loaded");
 		} catch (Exception e) {
 			EngineLogger.log("CRITICAL ERROR: FAILED TO LOAD WORLD");
