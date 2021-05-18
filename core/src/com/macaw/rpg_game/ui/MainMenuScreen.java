@@ -72,8 +72,6 @@ public class MainMenuScreen implements Screen {
 			e.printStackTrace();
 		}
 
-		dir = dir.replace("ui", "");
-
 		try {
 
 			font = new BitmapFont(Gdx.files.internal(dir + "font1.fnt"),
