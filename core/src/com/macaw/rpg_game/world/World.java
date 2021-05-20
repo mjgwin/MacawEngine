@@ -22,6 +22,7 @@ import com.macaw.rpg_game.entity.Mob;
 import com.macaw.rpg_game.entity.Player;
 import com.macaw.rpg_game.ui.IngameUI;
 import com.macaw.rpg_game.utils.DungeonGenerator;
+import com.macaw.rpg_game.utils.EngineLogger;
 import com.macaw.rpg_game.utils.InputHandler;
 import com.macaw.rpg_game.utils.TeleportData;
 import com.macaw.rpg_game.utils.TextureUtils;
@@ -172,7 +173,7 @@ public class World {
 				throw new IllegalStateException("Error: must init width and height in world constructor/file");
 			}
 		} catch (IOException | NumberFormatException e) {
-			// TODO Auto-generated catch block
+			EngineLogger.log("CRITICAL ERROR: FAILED TO LOAD WORLD DATA FILE");
 			e.printStackTrace();
 		}
 
