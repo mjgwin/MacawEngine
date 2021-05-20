@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.macaw.rpg_game.GameUI;
 import com.macaw.rpg_game.utils.EngineLogger;
@@ -24,6 +25,10 @@ import com.macaw.rpg_game.utils.TextureUtils;
 public class MainMenuScreen implements Screen {
 
 	private GameUI game;
+	
+	private Texture logo;
+	private Sprite logoSprite;
+	
 	private Texture exitButton;
 	private Texture exitActive;
 	private Texture playButton;
@@ -42,7 +47,9 @@ public class MainMenuScreen implements Screen {
 	private SpriteBatch renderBatch;
 
 	private boolean drawSecond;
-
+	private boolean drawLogo;
+	private float logoAlpha = 1.0f;
+	private float logoTimer = 0f;
 	/*
 	 * The constructor loads in textures for the UI and sets the font that will be
 	 * used for all text
@@ -54,7 +61,7 @@ public class MainMenuScreen implements Screen {
 		String dir = TextureUtils.getInternalPath("");
 
 		try {
-
+			logo = new Texture(Gdx.files.internal(dir + "ui/logo.png"));
 			exitButton = new Texture(Gdx.files.internal(dir + "ui/exitButton.png"));
 			exitActive = new Texture(Gdx.files.internal(dir + "ui/exitActive.png"));
 			playButton = new Texture(Gdx.files.internal(dir + "ui/playButton.png"));
@@ -89,11 +96,18 @@ public class MainMenuScreen implements Screen {
 		midHeight = Gdx.graphics.getHeight() / 2;
 
 		drawSecond = false;
+		
+		logoSprite = new Sprite(logo);
+		logoSprite.setPosition(midWidth - logoSprite.getWidth() / 2, midHeight - logoSprite.getHeight() / 2);
+		//logoSprite.setSize(400, 400);
+		logoSprite.scale(1.5f);
+		
+		drawLogo = true;
 	}
-
+	
 	@Override
 	public void show() {
-
+		
 	}
 
 	private boolean containsMouse(float x, float y, float width, float height) {
@@ -113,17 +127,31 @@ public class MainMenuScreen implements Screen {
 
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			renderBatch.begin();
-			if (drawSecond) {
-				drawSecondButtons();
-			} else {
-				drawFirstButtons();
-			}
 
+			renderBatch.begin();
+			
+			if(drawLogo) {
+				if(logoTimer > 4f) {
+					drawLogo = false;
+				}else {
+					logoSprite.setAlpha(logoAlpha);
+					logoSprite.draw(renderBatch);
+					logoAlpha -= 0.003f;
+					logoTimer += Gdx.graphics.getDeltaTime();
+				}
+			}else {
+				if (drawSecond) {
+					drawSecondButtons();
+				} else {
+					drawFirstButtons();
+				}
+			}
+			
 			renderBatch.end();
 
 		} catch (Exception e) {
 			EngineLogger.log("CRITICAL ERROR: MAIN MENU RENDERER BROKEN");
+			e.printStackTrace();
 		}
 
 	}
@@ -136,7 +164,7 @@ public class MainMenuScreen implements Screen {
 	private void drawFirstButtons() {
 		float middle = midWidth - playButton.getWidth() / 2;
 
-		font.draw(renderBatch, "Macaw RPG", midWidth - 300, midHeight + 300);
+		font.draw(renderBatch, "Zombie Tower Defense", midWidth - 550, midHeight + 300);
 
 		if (containsMouse(middle, midHeight, playButton.getWidth(), playButton.getHeight())) {
 			renderBatch.draw(playActive, middle, midHeight);
@@ -163,7 +191,7 @@ public class MainMenuScreen implements Screen {
 
 	private void drawSecondButtons() {
 		float middle = midWidth - playButton.getWidth() / 2;
-		font.draw(renderBatch, "Macaw RPG", midWidth - 300, midHeight + 300);
+		font.draw(renderBatch, "Zombie Tower Defense", midWidth - 550, midHeight + 300);
 
 		if (containsMouse(middle, midHeight - 100, singleButton.getWidth(), singleButton.getHeight())) {
 			renderBatch.draw(singleActive, middle, midHeight - 100);

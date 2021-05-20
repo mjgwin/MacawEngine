@@ -27,11 +27,11 @@ public class TextureUtils {
 		String directory = System.getProperty("user.dir");
 		
 		//this is for external use (gradle)
-		directory = directory.concat("/assets/" + assetPath);
+		//directory = directory.concat("/assets/" + assetPath);
 		
 		//this is for eclipse internal use
-		//directory = directory.replace("desktop", "core");
-		//directory = directory.concat("/assets/" + assetPath);
+		directory = directory.replace("desktop", "core");
+		directory = directory.concat("/assets/" + assetPath);
 		return directory;
 	}
 

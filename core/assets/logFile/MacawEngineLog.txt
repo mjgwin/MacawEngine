@@ -1,6 +1,3 @@
 <MacawEngine> Game launched, first state set to MainMenuScreen
 <MacawEngine> Loaded UI textures from: C:\Users\Micah\eclipse-workspace\GDX_Project\core/assets/ui
 <MacawEngine> Loaded font textures from: C:\Users\Micah\eclipse-workspace\GDX_Project\core/assets/
-<MacawEngine> Camera loaded
-<MacawEngine> World loaded
-<MacawEngine> Render Engine started
