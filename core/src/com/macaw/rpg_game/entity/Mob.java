@@ -1,5 +1,7 @@
 package com.macaw.rpg_game.entity;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.macaw.rpg_game.utils.TextureUtils;
+import com.macaw.rpg_game.world.Block;
 
 /*
  * @author Micah Gwin
@@ -35,6 +38,8 @@ public class Mob {
 	private float elapsedTime = 0f;
 	private float animSpeed = 0.1f;
 	private TextureRegion currRegion;
+	
+	private static float COLLIDE_BUFFER = 3f;
 
 	public Mob(float x, float y, float width, float height, String normalPath, String damagePath) {
 		this.x = x;
@@ -110,17 +115,66 @@ public class Mob {
 
 	}
 
-	public void move(Player p) {
+	public void move(Player p, Block[][] world, ArrayList<Mob> mobs) {
 		if (!exists)
 			return;
+		
+		boolean collidesLeftX = false;
+		boolean collidesRightX = false;
+		boolean collidesTopY = false;
+		boolean collidesBottomY = false;
+		
+		float xMax = this.x + this.width / 2;
+		float yMax = this.y + this.height / 2;
+		
+		for(int j = 0; j < world.length; j++) {
+			for(int i = 0; i < world[0].length; i++) {
+				Block temp = world[j][i];
+				if(temp.getHitbox().contains(xMax - COLLIDE_BUFFER, yMax) && (temp.getId() == 1 || temp.getId() == 3)) {
+					collidesLeftX = true;
+				}
+				if(temp.getHitbox().contains(xMax + COLLIDE_BUFFER, yMax) && (temp.getId() == 1 || temp.getId() == 3)) {
+					collidesRightX = true;
+				}
+				if(temp.getHitbox().contains(xMax, yMax - COLLIDE_BUFFER) && (temp.getId() == 1 || temp.getId() == 3)) {
+					collidesBottomY = true;
+				}
+				if(temp.getHitbox().contains(xMax, yMax + COLLIDE_BUFFER) && (temp.getId() == 1 || temp.getId() == 3)) {
+					collidesTopY = true;
+				}
+				
+			}
+		}
+		
+		for(int i = 0; i < mobs.size(); i++) {
+			
+			if(equalsMob(mobs.get(i))) {
+				//do nothing
+			}else {
+				if(intersectsOther(mobs.get(i), "up")) collidesTopY = true;
+				if(intersectsOther(mobs.get(i), "down")) collidesBottomY = true;
+				if(intersectsOther(mobs.get(i), "left")) collidesLeftX = true;
+				if(intersectsOther(mobs.get(i), "right")) collidesRightX = true;
+			}
+			
+			
+		}
+		
 
 		double angle = getDistAngle(p.getX(), p.getY());
 		// Scale angle between -1,1 and multiply by speed to change position
 		double moveX = Math.cos(angle);
 		double moveY = Math.sin(angle);
-
-		this.x += speed * moveX;
-		this.y += speed * moveY;
+		
+		if((!collidesLeftX && moveX < 0) || (!collidesRightX && moveX > 0)) {
+			this.x += speed * moveX;
+		}
+		
+		if((!collidesBottomY && moveY < 0) || (!collidesTopY && moveY > 0)) {
+			this.y += speed * moveY;
+		}
+		
+		
 
 		if (animated) {
 			elapsedTime += Gdx.graphics.getDeltaTime();
@@ -145,10 +199,34 @@ public class Mob {
 
 		hitbox.set(x, y, width, height);
 	}
+	
+	private boolean intersectsOther(Mob other, String direction) {
+		boolean intersects = false;
+		
+		float xMax = this.x + this.width / 2;
+		float yMax = this.y + this.height / 2;
+		
+		if(direction.equals("up")) {
+			intersects = other.hitbox.contains(xMax, yMax + COLLIDE_BUFFER);
+		}else if(direction.equals("down")) {
+			intersects = other.hitbox.contains(xMax, yMax - COLLIDE_BUFFER);
+		}else if(direction.equals("left")) {
+			intersects = other.hitbox.contains(xMax - COLLIDE_BUFFER, yMax);
+		}else if(direction.equals("right")) {
+			intersects = other.hitbox.contains(xMax + COLLIDE_BUFFER, yMax);
+		}
+		
+		return intersects;
+	}
 
 	// Returns the angle from the mob position to the player position
 	private double getDistAngle(float playerX, float playerY) {
 		return Math.atan2((playerY - this.y), (playerX - this.x));
+	}
+	
+	private boolean equalsMob(Mob other) {
+		return this.x == other.x && this.y == other.y && this.width == other.width &&
+				this.height == other.height && this.health == other.health;
 	}
 
 	public Rectangle getHitbox() {

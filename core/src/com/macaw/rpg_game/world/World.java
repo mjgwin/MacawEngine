@@ -209,7 +209,7 @@ public class World {
 
 	private void updateEntities() {
 		for (Mob m : mobs) {
-			m.move(player);
+			m.move(player, blocks, mobs);
 			if (m.getHealth() <= 0) {
 				m.destroy();
 			}
