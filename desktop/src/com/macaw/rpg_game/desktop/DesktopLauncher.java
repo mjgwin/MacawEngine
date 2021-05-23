@@ -18,6 +18,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1280, 720);
 		config.setTitle("Zombie Tower Defense");
+		config.setForegroundFPS(75);
 		new Lwjgl3Application(new GameUI(), config);
 	}
 }

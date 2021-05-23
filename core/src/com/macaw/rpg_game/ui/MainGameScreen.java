@@ -65,7 +65,7 @@ public class MainGameScreen implements Screen {
 		try {
 			world = new World("worldMaps/testArena.txt", camera, cameraSpeed);
 			world.spawnPlayer(45,45);
-			world.spawnAnimatedMobs(20);
+			world.spawnAnimatedMobs(100);
 			EngineLogger.log("World loaded");
 		} catch (Exception e) {
 			EngineLogger.log("CRITICAL ERROR: FAILED TO LOAD WORLD");
@@ -90,7 +90,7 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-
+		Gdx.graphics.setTitle("Zombie Tower Defense    " + Gdx.graphics.getFramesPerSecond() + " fps");
 		try {
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

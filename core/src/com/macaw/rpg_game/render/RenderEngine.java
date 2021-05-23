@@ -17,6 +17,13 @@ import com.macaw.rpg_game.utils.TextureUtils;
 import com.macaw.rpg_game.world.Block;
 import com.macaw.rpg_game.world.World;
 
+/*
+ * @author Micah Gwin
+ * 
+ * Main rendering class for game, deals with drawing
+ * the world blocks, mobs and the player
+ */
+
 public class RenderEngine {
 	
 	private static int NUM_TEXTURES = 6;
@@ -131,13 +138,26 @@ public class RenderEngine {
 				&& b.getY() < yMax + buffer;
 	}
 	
+	private boolean inViewport(Mob m, float buffer) {
+		OrthographicCamera camera = world.getCamera();
+		float xMin = camera.position.x - (camera.viewportWidth / 2);
+		float yMin = camera.position.y - (camera.viewportHeight / 2);
+		float xMax = camera.position.x + (camera.viewportWidth / 2);
+		float yMax = camera.position.y + (camera.viewportHeight / 2);
+
+		return m.getX() > xMin - buffer && m.getX() < xMax + buffer && m.getY() > yMin - buffer
+				&& m.getY() < yMax + buffer;
+	}
+	
 	public void renderPlayer(SpriteBatch batch) {
 		world.getPlayer().render(batch);
 	}
 
 	public void renderMobs(SpriteBatch batch) {
 		for (Mob m : world.getMobs()) {
-			m.render(batch);
+			if(inViewport(m, VIEWPORT_BUFFER)) {
+				m.render(batch);
+			}
 		}
 	}
 
