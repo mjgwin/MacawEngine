@@ -54,7 +54,7 @@ public class RenderEngine {
 	private void init() {
 		mainBatch = new SpriteBatch();
 		uiBatch = new SpriteBatch();
-		ingameUI = new IngameUI(world.getPlayer(), font);
+		ingameUI = new IngameUI(world, font);
 	}
 	
 	private void setTextures() {
@@ -87,6 +87,7 @@ public class RenderEngine {
 		renderWorld(mainBatch);
 		renderProjectiles(mainBatch);
 		renderPlayer(mainBatch);
+		renderBigTiles(mainBatch);
 		renderMobs(mainBatch);
 		mainBatch.end();
 		
@@ -96,7 +97,7 @@ public class RenderEngine {
 	}
 	
 	private void renderUI(SpriteBatch batch) {
-		ingameUI.drawBars(batch);
+		ingameUI.draw(batch);
 	}
 	
 	public void renderLoadingScreen() {
@@ -122,10 +123,15 @@ public class RenderEngine {
 
 		}
 
+		
+	}
+	
+	private void renderBigTiles(SpriteBatch batch) {
 		for (BigTile b : world.getBigTiles()) {
 			b.render(batch);
 		}
 	}
+	
 	
 	private boolean inViewport(Block b, float buffer) {
 		OrthographicCamera camera = world.getCamera();

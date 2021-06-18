@@ -55,6 +55,8 @@ public class World {
 	
 	private boolean loading = false;
 	
+	private int wave;
+	
 	
 
 	public World(int width, int height, float blockSize, OrthographicCamera camera, float cameraSpeed) {
@@ -97,6 +99,7 @@ public class World {
 		this.camera = camera;
 		this.cameraSpeed = cameraSpeed;
 		loadFromFile(path);
+		wave = 0;
 	}
 
 	public void spawnPlayer(int x, int y) {
@@ -205,6 +208,13 @@ public class World {
 		input.update();
 		updatePlayer();
 		updateProjectiles();
+		checkWave();
+	}
+	
+	private void checkWave() {
+		if(getNumMobs() == 0) {
+			nextWave();
+		}
 	}
 
 	private void updateEntities() {
@@ -308,6 +318,12 @@ public class World {
 		}
 	}
 	
+	public void nextWave() {
+		wave++;
+		int numSpawns = wave * 10;
+		this.spawnAnimatedMobs(numSpawns);
+	}
+	
 	public Block[][] getBlocks() {
 		return blocks;
 	}
@@ -338,6 +354,14 @@ public class World {
 
 	public OrthographicCamera getCamera() {
 		return camera;
+	}
+	
+	public int getWave() {
+		return wave;
+	}
+	
+	public int getNumMobs() {
+		return mobs.size();
 	}
 
 	public int getWidth() {
